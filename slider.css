@@ -83,35 +83,3 @@ text-decoration: underline;
 .next {
   right: 0px;
 }
-.slider-container {
-  display: flex;
-  transition: transform 0.5s ease-in-out; /* Add transition for smooth sliding */
-}
-
-.slider-box {
-  flex: 0 0 33.33%; /* Set width for each item (adjust according to your design) */
-}
-
-.slider {
-  overflow: hidden; /* Hide overflow to prevent scrollbars */
-}
-
-.prev,
-.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.5);
-  border: none;
-  padding: 10px;
-  font-size: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.prev:hover,
-.next:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './slide.css';
 
 const Slideshow = () => {
@@ -26,14 +26,10 @@ const Slideshow = () => {
   ];
 
   const plusSlides = (n) => {
-    let newIndex = slideIndex + n;
-    if (newIndex >= events.length) {
-      newIndex = 0; // Reset to the beginning if at the end
+    const newIndex = slideIndex + n;
+    if (newIndex >= 0 && newIndex < events.length) {
+      setSlideIndex(newIndex);
     }
-    if (newIndex < 0) {
-      newIndex = events.length - 1; // Go to the end if at the beginning
-    }
-    setSlideIndex(newIndex);
   };
 
   const currentSlide = (index) => {
@@ -41,14 +37,6 @@ const Slideshow = () => {
       setSlideIndex(index);
     }
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      plusSlides(1);
-    }, 5000); // Change slide every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [slideIndex]);
 
   return (
     <div className="slideshow-container">

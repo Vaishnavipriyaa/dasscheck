@@ -1,6 +1,6 @@
 .parallax {
   /* The image used */
-  background-image: url('/home/duggaraju/my-app/src/homepage2.jpg');
+  background-image: url('./homepage2.jpg');
 
   /* Full height */
   height: 100vh; 
@@ -81,20 +81,6 @@ background-color: rgb(227, 230, 233);
 display: flex;
 box-shadow: inset 0px -2px 4px rgba(0, 0, 0, 0.1), inset 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add inner shadows to the top and bottom */
 }
-.view-all-link {
-  /* display: inline-block; */
-  float: right;
-  background-color: #1e1f20;
-  color: #ffffff;
-  padding: 8px 10px;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.view-all-link:hover {
-  background-color: #0056b3;
-}
 
 .news-content {
 flex: 1;
@@ -117,44 +103,22 @@ padding: 8px;
 text-align: left;
 }
 .calendar-container {
-  margin-left: 10px;
+  margin-left: 2%;
   display: flex;
+  text-align: center;
 }
 
 .centered-text {
   text-align: center;
   flex: 1;
+  
 }
 
-.FAQ-container {
-  background-color: rgb(227, 230, 233);
-
-  flex: 1;
-  /* margin-left: 20px; 
-  margin-right: 20px; */
-  margin-top: 20px;
-  box-shadow: inset 0px -2px 4px rgba(0, 0, 0, 0.1), inset 0px 2px 4px rgba(0, 0, 0, 0.1); 
-
-}
-
-.FAQ-container ul {
-  padding: 0;
-
-}
-
-.FAQ-container li {
-  margin-bottom: 5px; /* Adjust the margin between list items */
-  font-size: 16px; /* Adjust the font size as needed */
-  text-align: center;
-  border-bottom: 1px solid #ccc; /* Add a border line between list items */
-  padding-bottom: 15px; /* Add padding at the bottom of each list item */
-  margin-top: 10px;
-}
 
 .upcoming-events{
   /* flex: 1; */
-  margin-left: 40px; /* Adjust margin as needed */
+  margin-left: 2%; /* Adjust margin as needed */
   /* margin-top: 20px; */
-  margin-right: 30px;
-  margin-bottom: 30px;
+  margin-right: 2%;
+  margin-bottom: 2%;
 }
