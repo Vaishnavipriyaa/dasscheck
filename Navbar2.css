@@ -135,9 +135,6 @@
   margin-left: 5px;
 }
 
-span{
-  padding-left: 55px;
-}
 /* Sidebar.css */
 
 .hamburger-name {
@@ -166,10 +163,10 @@ span{
 }
 
 .navbar {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
-  width: 100%;
+  width:auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -185,7 +182,7 @@ span{
 }
 
 .menu-name-literally {
-  margin-left: 10px; /* Adjust as needed */
+  margin-left: 10px; 
 }
 
 .logo-div {

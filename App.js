@@ -1,68 +1,48 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./App.css";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import Input from "@mui/material/Input"; // Import Input component
 
 const App = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [eventName, setEventName] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
-  const [eventImage, setEventImage] = useState(null);
   const [events, setEvents] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const fileInputRef = useRef(null); // Create a ref for the file input
+  const [commentBoxPosition, setCommentBoxPosition] = useState({ x: 100, y: 100 }); // Adjust x and y values as needed
 
   const handleCalendarClick = (value, event) => {
     setSelectedDate(value);
-    setOpenModal(true);
   };
 
-  const Event_Name_Update = (event) => {
+  const Event_Data_Update = (event) => {
     setEventName(event.target.value);
-  };
-
-  const Event_Description_Update = (event) => {
-    setEventDescription(event.target.value);
-  };
-
-  const Image_Select = (event) => {
-    setEventImage(URL.createObjectURL(event.target.files[0])); // Update to store image URL
   };
 
   const Create_Event_Fun = (e) => {
     e.preventDefault();
-    if (selectedDate && eventName && eventDescription && eventImage) {
+    if (selectedDate && eventName) {
       const newEvent = {
         id: new Date().getTime(),
         date: selectedDate,
         title: eventName,
-        description: eventDescription,
-        image: eventImage,
       };
       setEvents([...events, newEvent]);
+      setSelectedDate(null);
       setEventName("");
-      setEventDescription("");
-      setEventImage(null); // Reset image field
-      fileInputRef.current.value = ''; // Clear file input field
+      setSelectedDate(newEvent.date);
     }
   };
 
-  const Update_Event_Fun = (eventId, newName, newDescription) => {
+  const closeCommentBox = () => {
+    setSelectedDate(null);
+  };
+
+  const Update_Event_Fun = (eventId, newName) => {
     const updatedEvents = events.map((event) => {
       if (event.id === eventId) {
         return {
           ...event,
           title: newName,
-          description: newDescription,
+          editing: false, // Ensure editing status is set to false after update
         };
       }
       return event;
@@ -75,17 +55,9 @@ const App = () => {
     setEvents(updatedEvents);
   };
 
-  const handleEdit = (event) => {
-    setSelectedEvent(event);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
   return (
-    <div className="app">
-      <div className="container">
+    
+      // <div className="container">
         <div className="calendar-container">
           <Calendar
             value={selectedDate}
@@ -108,91 +80,106 @@ const App = () => {
               return eventOnDate ? <div className="event-dot"></div> : null;
             }}
           />
-          <Modal open={openModal} onClose={handleCloseModal}>
-            <Box
-              sx={{
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                position: "absolute",
-                bgcolor: "background.paper",
-                boxShadow: 24,
-                p: 4,
-                width: 400,
-                maxHeight: "80vh",
-                overflowY: "auto",
-              }}
+          {selectedDate && (
+            <form
+              className="comment-box"
+              style={{ '--x': commentBoxPosition.x , '--y': commentBoxPosition.y , zIndex:10}}
+              onSubmit={Create_Event_Fun}
             >
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h6" component="h2">
-                  Create Event
-                </Typography>
-                <IconButton onClick={handleCloseModal}>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-              <p>Selected Date: {selectedDate && selectedDate.toDateString()}</p>
-              <TextField
-                label="Event Name"
-                variant="outlined"
+              <button className="close-button" onClick={closeCommentBox}>
+                &#10006;
+              </button>
+              <h2>Create Event</h2>
+              <p>Selected Date: {selectedDate.toDateString()}</p>
+              <input
+                type="text"
+                placeholder="Event Name"
                 value={eventName}
-                onChange={Event_Name_Update}
-                fullWidth
-                sx={{ mt: 2 }}
+                onChange={Event_Data_Update}
               />
-              <TextField
-                label="Description"
-                variant="outlined"
-                value={eventDescription}
-                onChange={Event_Description_Update}
-                fullWidth
-                sx={{ mt: 2 }}
-              />
-              <Input type="file" onChange={Image_Select} sx={{ mt: 2 }} inputRef={fileInputRef} /> {/* Pass ref to file input */}
-              {eventImage && ( // Conditionally render image preview
-                <img src={eventImage} alt="Event" style={{ width: "100%", marginTop: "10px" }} />
-              )}
-              <Button onClick={Create_Event_Fun} variant="contained" sx={{ mt: 2 }}>
-                Add Event
-              </Button>
-              <div className="event-list" style={{ maxHeight: "300px", overflowY: "auto" }}>
-                <Typography variant="h6" component="h2">
-                  Events
-                </Typography>
-                {events
-                  .filter((event) => event.date.toDateString() === (selectedDate && selectedDate.toDateString()))
-                  .map((event) => (
-                    <div key={event.id} className="event">
-                      {selectedEvent && selectedEvent.id === event.id ? (
-                        <TextField
-                          value={event.title}
-                          onChange={(e) => Update_Event_Fun(event.id, e.target.value, event.description)}
-                          variant="outlined"
-                          fullWidth
-                        />
-                      ) : (
-                        <Typography>{event.title}</Typography>
-                      )}
-                      {selectedEvent && selectedEvent.id === event.id ? (
-                        <Button onClick={() => setSelectedEvent(null)} variant="contained">
-                          Close
-                        </Button>
-                      ) : (
-                        <Button onClick={() => handleEdit(event)} variant="contained">
-                          Edit
-                        </Button>
-                      )}
-                      <Button onClick={() => Delete_Event_Fun(event.id)} variant="contained" color="error">
-                        Delete
-                      </Button>
-                    </div>
-                  ))}
+              <button type="submit" className="create-btn">
+                Click Here to Add Event
+              </button>
+              {/* Event list */}
+              <div className="event-list">
+                <h2 style={{ fontSize: "20px" }}>Events List</h2>
+                <div className="event-cards">
+                  {events.map((event) =>
+                    event.date.toDateString() === selectedDate.toDateString() ? (
+                      <div key={event.id} className="event-card">
+                        <div className="event-card-header">
+                          <div className="event-actions">
+                            <button
+                              className="update-btn"
+                              onClick={() => {
+                                setEvents((prevEvents) =>
+                                  prevEvents.map((prevEvent) =>
+                                    prevEvent.id === event.id
+                                      ? { ...prevEvent, editing: true }
+                                      : prevEvent
+                                  )
+                                );
+                              }}
+                            >
+                              <span role="img" aria-label="Update">&#9998;</span>
+                            </button>
+                            <button
+                              className="delete-btn"
+                              onClick={() => Delete_Event_Fun(event.id)}
+                            >
+                              <span role="img" aria-label="Delete">&#10060;</span>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="event-card-body">
+                          {event.editing ? (
+                            <div className="event-edit-container">
+                              <input
+                                type="text"
+                                value={event.title}
+                                onChange={(e) =>
+                                  setEvents((prevEvents) =>
+                                    prevEvents.map((prevEvent) =>
+                                      prevEvent.id === event.id
+                                        ? { ...prevEvent, title: e.target.value }
+                                        : prevEvent
+                                    )
+                                  )
+                                }
+                                onBlur={() => {
+                                  Update_Event_Fun(event.id, event.title);
+                                }}
+                                autoFocus
+                              />
+                              <button className="ok-btn" onClick={() => Update_Event_Fun(event.id, event.title)}>OK</button>
+                            </div>
+                          ) : (
+                            <p
+                              className="event-title"
+                              onClick={() => {
+                                setEvents((prevEvents) =>
+                                  prevEvents.map((prevEvent) =>
+                                    prevEvent.id === event.id
+                                      ? { ...prevEvent, editing: true }
+                                      : { ...prevEvent, editing: false }
+                                  )
+                                );
+                              }}
+                            >
+                              {event.title}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ) : null
+                  )}
+                </div>
               </div>
-            </Box>
-          </Modal>
+            </form>
+          )}
         </div>
-      </div>
-    </div>
+      // </div>
+    
   );
 };
 

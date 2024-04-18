@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import './Navbar2.css';
-import Logo from '/home/duggaraju/my-app/src/logo.png';
+import Logo from './images/logo.png';
 
 async function fetchPageData(index) {
     try {
@@ -25,6 +25,7 @@ async function fetchPageData(index) {
 }
 
 const SubPages = ({kontent}) => {
+  const negivate = useNavigate();
   const [dropdownStates, setDropdownStates] = useState({});
   const [subPages, setsubPages] = useState({}); // Start with null or an empty array
   async function toggleDropdown(page,yindex) {
@@ -37,6 +38,11 @@ const SubPages = ({kontent}) => {
         [page.index]: await fetchPageData({ index: page.index }),
     });
   }
+  const DisplayPage = (index) => {
+    console.log(index);
+    negivate(`/display-publish/${index}`);
+    window.location.reload(); // This will reload the page
+  }
   console.log(kontent);
   if(Array.isArray(kontent)){
     return(
@@ -46,7 +52,7 @@ const SubPages = ({kontent}) => {
             <div className='sub-nav-name'>
             {konts.subidS.length !== 0 ? (
                 <>
-                  <span>{konts.title}</span>
+                <span style={{ paddingLeft:"55px" }} onClick={() => DisplayPage(konts.index)}>{konts.title}</span>
                   <div
                     className="dropdown-icon"
                     onClick={() => toggleDropdown(konts,konts.index)}
@@ -55,7 +61,7 @@ const SubPages = ({kontent}) => {
                   </div>
                 </>
               ) : (
-                <span>{konts.title}</span>
+                <span  style={{ paddingLeft:"55px" }} onClick={() => DisplayPage(konts.index)}>{konts.title}</span>
               )}</div>
               {dropdownStates[konts.index] && subPages[konts.index] ? (
               <SubPages 
@@ -69,6 +75,7 @@ const SubPages = ({kontent}) => {
 }
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [pageTitles, setPageTitles] = useState([]);
   const [dropdownStates, setDropdownStates] = useState({});
@@ -91,12 +98,25 @@ const Navbar = () => {
             [page.index]: await fetchPageData({ index: page.index }),
         });
     }
-
+  
     const toggleSidebar = () => {
       console.log("Hi")
       setIsOpen(!isOpen);
     };
-  
+    
+    const DisplayPage = (index) => {
+      console.log(index);
+      if(index === 1)
+      {
+        navigate(`/display-parallax`);
+      }
+      else
+      {
+        navigate(`/display-publish/${index}`);
+      }
+      window.location.reload(); // This will reload the pag
+    }
+
   return (
     <>
     <div className='navbar'>
@@ -130,7 +150,7 @@ const Navbar = () => {
             <div className='nav-name'>
             {page.subidS.length !== 0 ? (
               <>
-                <span>{page.title}</span>
+                <span style={{ paddingLeft:"55px" }} onClick={() => DisplayPage(page.index)}>{page.title}</span>
                 <div
                   className="dropdown-icon"
                   onClick={() => toggleDropdown(page,page.index)}
@@ -139,8 +159,8 @@ const Navbar = () => {
                 </div>
               </>
             ) : (
-              <span>{page.title}</span>
-            )}</div>
+              <span style={{ paddingLeft:"55px" }} onClick={() => DisplayPage(page.index)}>{page.title}</span>
+              )}</div>
             {dropdownStates[page.index] && subPages[page.index] ? (
             <SubPages 
             kontent = {subPages[page.index]}/>
